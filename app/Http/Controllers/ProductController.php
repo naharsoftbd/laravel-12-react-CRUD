@@ -83,9 +83,22 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CreateProductRequest $request, string $id)
+    public function update(CreateProductRequest $request, Product $product)
     {
-        dd($request->all());
+        if($product){
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->description = $request->description;
+
+            if($request->file('featuredimage')){
+            $featuredimage = $request->file('featuredimage');
+            $featuredimageOriginalName = $featuredimage->getClientOriginalName();
+            $featuredimage = 'storage/'.$featuredimage->store('products','public');
+            $product->featured_image = $featuredimage;
+        }
+        $product->save();
+        return redirect()->route('products.index')->with('success','Product updated successfully');
+        }
     }
 
     /**

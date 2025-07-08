@@ -33,11 +33,12 @@ export default function Edit({product}) {
             });
     const submit: FormEventHandler = (e) => {
             e.preventDefault();
-            console.log(data);
+            console.log(data.name);
             put(route('products.update', product.id));
         };
 
     const HandleFIleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.files);
         if(e.target.files && e.target.files.length>0){
            setData('featuredimage', e.target.files[0]); 
         }
@@ -101,11 +102,9 @@ export default function Edit({product}) {
                         <Input
                             id="featuredimage"
                             type="file"
-                            required
                             autoFocus
-                            tabIndex={1}
-                            autoComplete="featuredimage"
-                             disabled={processing}
+                            tabIndex={4}
+                            disabled={processing}
                              onChange={HandleFIleUpload}
                             
                         />
