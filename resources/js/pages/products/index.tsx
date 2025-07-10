@@ -4,6 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
+import { Pagination } from '@/components/ui/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,7 +24,7 @@ export default function Index({ products }) {
                     <Link href={route('products.create')} method="get" className="mt-2 w-fit bg-indigo-800 px-4 py-2 rounded-lg text-white text-md cursor-pointer" as="button">Create Product</Link>
                 </div>
                 
-                
+  <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">         
   <table className="min-w-full text-left text-sm whitespace-nowrap">
 
     <thead className="uppercase tracking-wider border-b-2 dark:border-neutral-600">
@@ -54,7 +55,7 @@ export default function Index({ products }) {
     </thead>
 
     <tbody>
-    { products && products.map( (product, index) => (
+    { products.data && products.data.map( (product, index) => (
       <tr key={index} className="border-b dark:border-neutral-600">
         <td className="px-6 py-4">
           {index+1}
@@ -82,7 +83,8 @@ export default function Index({ products }) {
     </tbody>
 
   </table>
-
+  </div>
+  <Pagination products={products}/>
 
             </div>
         </AppLayout>

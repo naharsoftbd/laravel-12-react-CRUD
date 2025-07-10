@@ -14,7 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::get()->map(fn($product)=>[
+        $products = Product::paginate(5);
+        $products->getCollection()->transform(fn($product)=>[
             'id' => $product->id,
             'name'=> $product->name,
             'price' => $product->price,
