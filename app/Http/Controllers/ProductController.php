@@ -12,9 +12,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(5);
+        
+        $products = Product::query();
+
+        if($request->filled('search')){
+            $search = $request->search;
+            $products->where(fn($query) =>
+                $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('price', 'like', "{$search}")
+        );
+        }
+        $products = $products->latest()->paginate(5)->withQueryString();
         $products->getCollection()->transform(fn($product)=>[
             'id' => $product->id,
             'name'=> $product->name,
@@ -24,7 +35,8 @@ class ProductController extends Controller
             'created_at' => $product->created_at->format('d M Y')
         ]);
         return Inertia::render('products/index',[
-            'products' => $products
+            'products' => $products,
+            'filters' => $request->search
         ]);
     }
 
