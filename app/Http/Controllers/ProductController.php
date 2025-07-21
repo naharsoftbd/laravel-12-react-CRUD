@@ -53,6 +53,7 @@ class ProductController extends Controller
      */
     public function store(CreateProductRequest $request)
     {
+    
         $featuredimage = null;
         if($request->file('featuredimage')){
             $featuredimage = $request->file('featuredimage');
@@ -98,6 +99,7 @@ class ProductController extends Controller
      */
     public function update(CreateProductRequest $request, Product $product)
     {
+
         if($product){
             $product->name = $request->name;
             $product->price = $request->price;
@@ -117,8 +119,10 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product = Product::find($id);
+        
         if($product){
             $product->delete();
         }

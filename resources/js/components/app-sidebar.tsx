@@ -14,7 +14,7 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Product Management',
+        title: 'Product',
         href: '/products',
         icon: ShoppingBasket,
     },
