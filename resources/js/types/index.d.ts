@@ -22,6 +22,11 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface NavItemWithSubmenu extends NavItem {
+    href?: string;
+    submenu?: NavItem[] | null;
+}
+
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };

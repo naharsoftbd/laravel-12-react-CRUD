@@ -2,21 +2,46 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { NavItemWithSubmenu, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, ShoppingBasket } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: NavItemWithSubmenu [] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
         icon: LayoutGrid,
+        submenu:[
+            {
+                title: 'Dashboard 1',
+                href: '/dashboard',
+                icon: LayoutGrid, 
+            },
+            {
+                title: 'Dashboard 2',
+                href: '/dashboard',
+                icon: LayoutGrid, 
+            },
+
+
+        ]
     },
     {
         title: 'Product',
-        href: '/products',
         icon: ShoppingBasket,
+        submenu:[
+            {
+                title: 'Products',
+                href: '/products',
+                icon: LayoutGrid, 
+            },
+            {
+                title: 'Create Product',
+                href: '/products/create',
+                icon: LayoutGrid, 
+            },
+        ]
+            
     },
 ];
 
