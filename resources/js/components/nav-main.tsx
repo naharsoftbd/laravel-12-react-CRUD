@@ -2,6 +2,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { type NavItem, NavItemWithSubmenu } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { ChevronDown } from 'lucide-react';
 
 export function NavMain({ items = [] }: { items: NavItemWithSubmenu[] }) {
     const page = usePage();
@@ -11,7 +12,7 @@ export function NavMain({ items = [] }: { items: NavItemWithSubmenu[] }) {
             <SidebarMenu>
                 
                     {items.map((item) => (
-                        <Collapsible defaultOpen={page.url.startsWith(item.href) ? true:false} className="group/collapsible">
+                        <Collapsible defaultOpen={item.submenu?.some((subitem)=>subitem.href==page.url)} className="group/collapsible">
                         <SidebarMenuItem key={item.title}>
                             <CollapsibleTrigger asChild>
                                 <SidebarMenuButton asChild isActive={page.url.startsWith(item.href)} tooltip={{ children: item.title }}>
@@ -23,7 +24,8 @@ export function NavMain({ items = [] }: { items: NavItemWithSubmenu[] }) {
                                     ):(
                                         <div className='cursor-pointer'>
                                           {item.icon && <item.icon />}
-                                          <span>{item.title}</span>  
+                                          <span>{item.title}</span> 
+                                          <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" /> 
                                         </div>
                                     )}
                                     
