@@ -25,7 +25,7 @@ class ProductController extends Controller
                 ->orWhere('price', 'like', "{$search}")
         );
         }
-        $products = $products->latest()->paginate(5)->withQueryString();
+        $products = $products->latest()->paginate(10)->withQueryString();
         $products->getCollection()->transform(fn($product)=>[
             'id' => $product->id,
             'name'=> $product->name,

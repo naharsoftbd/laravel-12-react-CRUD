@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\UserController;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome');
@@ -18,12 +19,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::controller(ProductController::class)->group(function () {
         Route::resource('products',ProductController::class);
-        // Route::get('products',[ProductController::class,'index'])->name('products.index');
-        // Route::get('products/create',[ProductController::class,'create'])->name('products.create');
-        // Route::post('products',[ProductController::class,'store'])->name('products.store');
-        // Route::get('products/{id}/edit',[ProductController::class,'edit'])->name('products.edit');
-        // Route::post('products',[ProductController::class,'update'])->name('products.update');
-        // Route::DELETE('products/{id}',[ProductController::class,'destroy'])->name('products.destroy');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::resource('users',UserController::class);
     });
     
 });

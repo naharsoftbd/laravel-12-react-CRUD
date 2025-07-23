@@ -4,27 +4,14 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemWithSubmenu, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, ShoppingBasket } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, ShoppingBasket, Users, Notebook } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemWithSubmenu [] = [
     {
         title: 'Dashboard',
         icon: LayoutGrid,
-        submenu:[
-            {
-                title: 'Dashboard 1',
-                href: '/dashboard',
-                icon: LayoutGrid, 
-            },
-            {
-                title: 'Dashboard 2',
-                href: '/dashboard',
-                icon: LayoutGrid, 
-            },
-
-
-        ]
+        href: '/dashboard',
     },
     {
         title: 'Product',
@@ -43,19 +30,21 @@ const mainNavItems: NavItemWithSubmenu [] = [
         ]
             
     },
+    {
+        title: 'Users',
+        href: '/users',
+        icon: Users,
+    },
+    {
+        title: 'Roles',
+        href: '/roles',
+        icon: Notebook,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
+    
+    
 ];
 
 export function AppSidebar() {

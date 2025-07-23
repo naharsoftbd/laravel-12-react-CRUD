@@ -9,16 +9,16 @@ import { Input } from '@/components/ui/input';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Product',
-    href: '/products',
+    title: 'Users',
+    href: '/users',
   },
 ];
 
 
 
 
-export default function Index({ products, filters }) {
-  console.log(filters);
+export default function Index({ users, filters }) {
+  console.log(users);
   const { data, setData } = useForm({
     search: filters?.search || ''
   })
@@ -28,7 +28,7 @@ export default function Index({ products, filters }) {
     console.log(value);
     setData('search', value);
     const queryString = value ? { search: value } : {};
-    router.get(route('products.index'), queryString, {
+    router.get(route('users.index'), queryString, {
       preserveState: true,
       preserveScroll: true,
     })
@@ -37,7 +37,7 @@ export default function Index({ products, filters }) {
 
   const handleReset = () => {
     setData('search', '');
-    router.get(route('products.index'), {}, {
+    router.get(route('users.index'), {}, {
       preserveState: true,
       preserveScroll: true,
     })
@@ -46,16 +46,16 @@ export default function Index({ products, filters }) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Product" />
+      <Head title="Users" />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
         <div className='flex items-center justify-between'>
-          <Input type='text' value={data.search} onChange={handleChange} className='h-10 w-1/2' placeholder='Search Product ...' name='search' />
+          <Input type='text' value={data.search} onChange={handleChange} className='h-10 w-1/2' placeholder='Search user ...' name='search' />
           <Button onClick={handleReset} className='h-10 cursor-pointer bg-red-600 ml-2'>
             <X size={20} />
           </Button>
 
           <div className='ml-auto'>
-            <Link href={route('products.create')} method="get" className="mt-2 w-fit bg-indigo-800 px-4 py-2 rounded-lg text-white text-md cursor-pointer" as="button">Create Product</Link>
+            <Link href={route('users.create')} method="get" className="mt-2 w-fit bg-indigo-800 px-4 py-2 rounded-lg text-white text-md cursor-pointer" as="button">Create User</Link>
           </div>
 
 
@@ -71,16 +71,10 @@ export default function Index({ products, filters }) {
                   #
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Product
+                  Name
                 </th>
                 <th scope="col" className="px-6 py-4">
-                  Price
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Description
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Featured Image
+                  Email
                 </th>
                 <th scope="col" className="px-6 py-4">
                   Created At
@@ -93,27 +87,25 @@ export default function Index({ products, filters }) {
             </thead>
 
             <tbody>
-              {products.data && products.data.map((product, index) => (
+              {users.data && users.data.map((user, index) => (
                 <tr key={index} className="border-b dark:border-neutral-600">
                   <td className="px-6 py-4">
-                    {index + 1}
+                    {index+1}
                   </td>
                   <td className="px-6 py-4">
-                    {product.name}
+                    {user.name}
                   </td>
-                  <td className="px-6 py-4">{product.price}</td>
-                  <td className="px-6 py-4">{product.description}</td>
-                  <td className="px-6 py-4"><img src={product.featured_image} /></td>
-                  <td className="px-6 py-4">{product.created_at}</td>
+                  <td className="px-6 py-4">{user.email}</td>
+                  <td className="px-6 py-4">{user.created_at}</td>
                   <td className="px-6 py-4">
-                    <Link as="button" className='cursor-pointer rounded-lg bg-green-600 p-2 text-white' href={route('products.edit', product.id)}><Pencil size={20} /></Link>
+                    <Link as="button" className='cursor-pointer rounded-lg bg-green-600 p-2 text-white mt-1' href={route('users.edit', user.id)}><Pencil size={20} /></Link>
                     <Button className='cursor-pointer rounded-lg bg-red-600 p-1 text-white ml-2' onClick={() => {
-                      if (confirm('Are you sure want to delete this product?')) {
-                        router.delete(route('products.destroy', product.id), {
+                      if (confirm('Are you sure want to delete this user?')) {
+                        router.delete(route('users.destroy', user.id), {
                           preserveScroll: true
                         });
                       }
-                    }} ><Trash2 size={20} /></Button>
+                    }} ><Trash2 size={18} /></Button>
                   </td>
                 </tr>
               ))}
@@ -122,7 +114,7 @@ export default function Index({ products, filters }) {
 
           </table>
         </div>
-        <Pagination items={products} />
+        <Pagination items={users} />
 
       </div>
     </AppLayout>
