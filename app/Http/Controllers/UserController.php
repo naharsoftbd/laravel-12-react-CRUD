@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -27,11 +28,12 @@ class UserController extends Controller
                 
         );
         }
-        $users = $users->latest()->paginate(10)->withQueryString();
+        $users = $users->latest()->with('roles')->paginate(10)->withQueryString();
         $users->getCollection()->transform(fn($user)=>[
             'id' => $user->id,
             'name'=> $user->name,
             'email' => $user->email,
+            'roles' => $user->roles,
             'created_at' => $user->created_at->format('d M Y')
         ]);
         return Inertia::render('users/index',[
@@ -45,7 +47,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('users/create');
+        return Inertia::render('users/create',[
+            'roles' => Role::pluck('name')
+        ]);
     }
 
     /**
@@ -65,9 +69,11 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->syncRoles($request->roles);
+
         event(new Registered($user));
 
-        return redirect()->intended(route('users.index', absolute: false));
+        return redirect()->route('users.index')->with(['success' => 'User Created Successfully']);
     }
 
     /**
@@ -83,8 +89,11 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        $user = User::find($id);
         return Inertia::render('users/edit',[
-            'user' => User::find($id)
+            'user' => $user,
+            'userRoles' => $user->roles()->pluck('name'),
+            'roles' => Role::all(),
         ]);
     }
 
@@ -93,27 +102,30 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255',
         ]);
 
     if($request->password){
-       $user = $user->update([
+       $userupdate = $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
     }else{
 
-        $user = $user->update([
+        $userupdate = $user->update([
             'name' => $request->name,
             'email' => $request->email
         ]);
 
     }
 
-        return redirect()->intended(route('users.index', absolute: false));
+    $user->syncRoles($request->roles);
+
+        return redirect()->route('users.index')->with(['success' => 'User Updated Successfully']);
     }
 
     /**
@@ -125,6 +137,6 @@ class UserController extends Controller
             $user->delete();
         }
 
-        return redirect()->intended(route('users.index', absolute: false));
+        return redirect()->route('users.index')->with(['success' => 'User Deleted Successfully']);
     }
 }

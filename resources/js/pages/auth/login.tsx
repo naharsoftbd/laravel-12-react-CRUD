@@ -51,7 +51,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 <CardHeader>
                     <CardTitle className='text-center'>Login to your account</CardTitle>
                     <CardDescription className='text-center'>
-                        Enter your email below to login to your account
+                        Welcome, please sign in to your dashboard
                     </CardDescription>
                     
                 </CardHeader>

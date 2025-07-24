@@ -47,7 +47,7 @@ export default function Register() {
                 <CardHeader>
                     <CardTitle className='text-center'>Create an account</CardTitle>
                     <CardDescription className='text-center'>
-                        Enter your details below to create your account
+                        See your growth and get consulting support!
                     </CardDescription>
 
                 </CardHeader>

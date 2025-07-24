@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome');
@@ -18,11 +19,50 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::controller(ProductController::class)->group(function () {
-        Route::resource('products',ProductController::class);
+        Route::resource('products',ProductController::class)
+                                    ->only('create', 'store')
+                                    ->middleware('permission:Create');
+        Route::resource('products',ProductController::class)
+                                    ->only('edit', 'update')
+                                    ->middleware('permission:Edit');
+        Route::resource('products',ProductController::class)
+                                    ->only('destroy')
+                                    ->middleware('permission:Delete');
+        Route::resource('products',ProductController::class)
+                                    ->only('index', 'show')
+                                    ->middleware('permission:View|Create|Edit|Delete');
     });
 
     Route::controller(UserController::class)->group(function () {
-        Route::resource('users',UserController::class);
+        Route::resource('users',UserController::class)
+                                    ->only('create', 'store')
+                                    ->middleware('permission:Create');
+        Route::resource('users',UserController::class)
+                                    ->only('edit', 'update')
+                                    ->middleware('permission:Edit');
+        Route::resource('users',UserController::class)
+                                    ->only('destroy')
+                                    ->middleware('permission:Delete');
+        Route::resource('users',UserController::class)
+                                    ->only('index', 'show')
+                                    ->middleware('permission:View|Create|Edit|Delete');
+    });
+
+    Route::controller(RoleController::class)->group(function () {
+        
+        Route::resource('roles',RoleController::class)
+                                    ->only('create', 'store')
+                                    ->middleware('permission:Create');
+        Route::resource('roles',RoleController::class)
+                                    ->only('edit', 'update')
+                                    ->middleware('permission:Edit');
+        Route::resource('roles',RoleController::class)
+                                    ->only('destroy')
+                                    ->middleware('permission:Delete');
+        Route::resource('roles',RoleController::class)
+                                    ->only('index', 'show')
+                                    ->middleware('permission:View|Create|Edit|Delete');
+        
     });
     
 });

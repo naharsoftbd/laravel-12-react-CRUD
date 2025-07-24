@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Search, Trash2, X } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
+import { useEffect } from 'react';
+import { ToastContainer, toast } from "react-toastify";
+
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -17,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 
-export default function Index({ products, filters }) {
+export default function Index({ products, filters, flash }) {
   console.log(filters);
   const { data, setData } = useForm({
     search: filters?.search || ''
@@ -43,13 +46,23 @@ export default function Index({ products, filters }) {
     })
   }
 
+  useEffect(() => {
+    if(flash.message.success){
+      toast.success(flash.message.success);
+    }
+    if(flash.message.error){
+      toast.error(flash.message.error);
+    }
+  }, [flash]);
+
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Product" />
+      <ToastContainer />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
         <div className='flex items-center justify-between'>
-          <Input type='text' value={data.search} onChange={handleChange} className='h-10 w-1/2' placeholder='Search Product ...' name='search' />
+          <Input type='text' value={data.search} onChange={handleChange} className='h-10 w-1/3' placeholder='Search Product ...' name='search' />
           <Button onClick={handleReset} className='h-10 cursor-pointer bg-red-600 ml-2'>
             <X size={20} />
           </Button>
@@ -94,18 +107,18 @@ export default function Index({ products, filters }) {
 
             <tbody>
               {products.data && products.data.map((product, index) => (
-                <tr key={index} className="border-b dark:border-neutral-600">
+                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td className="px-6 py-4">
-                    {index + 1}
+                    {product.id}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-2">
                     {product.name}
                   </td>
-                  <td className="px-6 py-4">{product.price}</td>
-                  <td className="px-6 py-4">{product.description}</td>
-                  <td className="px-6 py-4"><img src={product.featured_image} /></td>
-                  <td className="px-6 py-4">{product.created_at}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-2">{product.price}</td>
+                  <td className="px-6 py-2">{product.description}</td>
+                  <td className="px-6 py-2"><img src={product.featured_image} /></td>
+                  <td className="px-6 py-2">{product.created_at}</td>
+                  <td className="px-6 py-2">
                     <Link as="button" className='cursor-pointer rounded-lg bg-green-600 p-2 text-white' href={route('products.edit', product.id)}><Pencil size={20} /></Link>
                     <Button className='cursor-pointer rounded-lg bg-red-600 p-1 text-white ml-2' onClick={() => {
                       if (confirm('Are you sure want to delete this product?')) {

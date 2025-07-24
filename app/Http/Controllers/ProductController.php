@@ -68,7 +68,7 @@ class ProductController extends Controller
         ]);
 
         if($product){
-            return redirect()->route('products.index')->with('success','Product Created Successfully');
+            return redirect()->route('products.index')->with(['success' => 'Product Created Successfully']);
         }
 
 
@@ -112,7 +112,7 @@ class ProductController extends Controller
             $product->featured_image = $featuredimage;
         }
         $product->save();
-        return redirect()->route('products.index')->with('success','Product updated successfully');
+        return redirect()->route('products.index')->with(['success' => 'Product updated successfully']);
         }
     }
 
@@ -127,6 +127,6 @@ class ProductController extends Controller
             $product->delete();
         }
 
-            return redirect()->route('products.index')->with('success','Product deleted Successfully');
+            return redirect()->route('products.index')->with(['success' => 'Product deleted Successfully']);
     }
 }

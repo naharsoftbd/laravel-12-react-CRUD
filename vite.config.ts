@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     server: {
         host: 'tutorial.test',
-        port:80
+        port:8080
       },
     plugins: [
         laravel({
