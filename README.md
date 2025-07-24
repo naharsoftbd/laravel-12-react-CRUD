@@ -30,4 +30,8 @@
 - `php artisan serve`
 
 
+### Credentials
 
+Admin :  
+    email :     abujafarmdsalah@gmail.com  
+    password :  12345678
