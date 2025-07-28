@@ -6,8 +6,16 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     server: {
-        host: 'tutorial.test',
-        port:8080
+        host: '0.0.0.0',
+        hmr:{
+            clientPort:5173,
+            host: 'tutorial.test',
+            protocol: 'ws'
+        },
+        port:5173,
+        watch: {
+            usePolling: true
+        }
       },
     plugins: [
         laravel({
