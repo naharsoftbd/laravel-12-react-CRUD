@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Inertia\Inertia;
+use App\Services\RoleService;
 
 class RoleController extends Controller
 {
+    public function __construct(
+        protected RoleService $roleService
+    ) {
+    }
     /**
      * Display a listing of the resource.
      */
@@ -19,18 +24,19 @@ class RoleController extends Controller
         if($request->filled('search')){
             $search = $request->search;
             $roles->where(fn($query) =>
-                $query->where('name', 'like', "%{$search}%")
-                
-                
+                $query->where('name', 'like', "%{$search}%")                     
         );
         }
+
         $roles = $roles->latest()->with('permissions')->paginate(10)->withQueryString();
-        $roles->getCollection()->transform(fn($user)=>[
-            'id' => $user->id,
-            'name'=> $user->name,
-            'permissions' => $user->permissions,
-            'created_at' => $user->created_at->format('d M Y')
+
+        $roles->getCollection()->transform(fn($role)=>[
+            'id' => $role->id,
+            'name'=> $role->name,
+            'permissions' => $role->permissions,
+            'created_at' => $role->created_at->format('d M Y')
         ]);
+
         return Inertia::render('roles/index',[
             'roles' => $roles,
             'filters' => $request->search
@@ -52,13 +58,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required',
             'permissions' => 'required'
         ]);
 
-        $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
+        $role = $this->roleService->create($data);
 
         return redirect()->route('roles.index')->with(['success' => 'Role Created Successfully']);
         
@@ -77,7 +82,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        $role = Role::find($id);
+        $role = $this->roleService->find($id);
         return Inertia::render('roles/edit',[
             'role' => $role,
             'rolePermissions' => $role->permissions->pluck('name'),
@@ -90,14 +95,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required',
             'permissions' => 'required'
         ]);
 
-        $role = Role::find($id);
-        $role->update(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
+        $role = $this->roleService->update($data, $id);
 
         return redirect()->route('roles.index')->with(['success' => 'Role Updated Successfully']);
     }
@@ -107,7 +110,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $role = Role::destroy($id);
+        $role = $this->roleService->delete($id);
         return redirect()->route('roles.index')->with(['success' => 'Role Deleted Successfully']);
     }
 }

@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Search, Trash2, X } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from "react-toastify";
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,7 +22,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 export default function Index({ products, filters, flash }) {
-  console.log(filters);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [productid, setProductId] = useState(false);
+
   const { data, setData } = useForm({
     search: filters?.search || ''
   })
@@ -47,13 +50,25 @@ export default function Index({ products, filters, flash }) {
   }
 
   useEffect(() => {
-    if(flash.message.success){
+    if (flash.message.success) {
       toast.success(flash.message.success);
     }
-    if(flash.message.error){
+    if (flash.message.error) {
       toast.error(flash.message.error);
     }
   }, [flash]);
+
+
+  const handleConfirm = () => {
+    router.delete(route('products.destroy', productid), {
+      preserveScroll: true
+    });
+    setShowConfirm(false);
+  };
+
+  const handleCancel = () => {
+    setShowConfirm(false);
+  };
 
 
   return (
@@ -119,13 +134,9 @@ export default function Index({ products, filters, flash }) {
                   <td className="px-6 py-2"><img src={product.featured_image} /></td>
                   <td className="px-6 py-2">{product.created_at}</td>
                   <td className="px-6 py-2">
-                    <Link as="button" className='cursor-pointer rounded-lg bg-green-600 p-2 text-white' href={route('products.edit', product.id)}><Pencil size={20} /></Link>
-                    <Button className='cursor-pointer rounded-lg bg-red-600 p-1 text-white ml-2' onClick={() => {
-                      if (confirm('Are you sure want to delete this product?')) {
-                        router.delete(route('products.destroy', product.id), {
-                          preserveScroll: true
-                        });
-                      }
+                    <Link as="button" className='cursor-pointer rounded-lg bg-green-600 hover:bg-green-800 p-2 text-white' href={route('products.edit', product.id)}><Pencil size={20} /></Link>
+                    <Button className='cursor-pointer rounded-lg bg-red-600 hover:bg-red-800 p-1 text-white ml-2' onClick={() => {
+                      setShowConfirm(true);setProductId(product.id);
                     }} ><Trash2 size={20} /></Button>
                   </td>
                 </tr>
@@ -136,7 +147,13 @@ export default function Index({ products, filters, flash }) {
           </table>
         </div>
         <Pagination items={products} />
-
+        <ConfirmDialog
+          message="Are you sure you want to delete this product?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          isOpen={showConfirm}
+          onClose={() => setShowConfirm(false)}
+        />
       </div>
     </AppLayout>
   );

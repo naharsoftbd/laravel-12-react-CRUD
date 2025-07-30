@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Search, Trash2, X } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { can } from '@/lib/can';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -21,7 +22,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 export default function Index({ roles, filters, flash }) {
-  console.log(roles);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [roleid, setRoleId] = useState(false);
+
   const { data, setData } = useForm({
     search: filters?.search || ''
   })
@@ -54,6 +57,17 @@ export default function Index({ roles, filters, flash }) {
       toast.error(flash.message.error);
     }
   }, [flash]);
+
+  const handleConfirm = () => {
+    router.delete(route('roles.destroy', roleid), {
+      preserveScroll: true
+    });
+    setShowConfirm(false);
+  };
+
+  const handleCancel = () => {
+    setShowConfirm(false);
+  };
 
 
   return (
@@ -120,17 +134,14 @@ export default function Index({ roles, filters, flash }) {
                   <td className="px-6 py-2">{role.created_at}</td>
                   <td className="px-6 py-2">
                     {can('Edit') &&
-                    <Link as="button" className='cursor-pointer rounded-lg bg-green-600 p-2 text-white mt-1' href={route('roles.edit', role.id)}><Pencil size={20} /></Link>
+                      <Link as="button" className='cursor-pointer rounded-lg bg-green-600 hover:bg-green-800 p-2 text-white mt-1' href={route('roles.edit', role.id)}><Pencil size={20} /></Link>
                     }
                     {can('Delete') &&
-                    <Button className='cursor-pointer rounded-lg bg-red-600 p-1 text-white ml-2' onClick={() => {
-                      if (confirm('Are you sure want to delete this user?')) {
-                        router.delete(route('roles.destroy', role.id), {
-                          preserveScroll: true
-                        });
-                      }
-                    }} ><Trash2 size={18} /></Button>
-                  }
+                      <Button className='cursor-pointer rounded-lg bg-red-600 hover:bg-red-800 p-1 text-white ml-2' onClick={() => {
+                        setShowConfirm(true); setRoleId(role.id);
+
+                      }} ><Trash2 size={18} /></Button>
+                    }
                   </td>
                 </tr>
               ))}
@@ -140,7 +151,13 @@ export default function Index({ roles, filters, flash }) {
           </table>
         </div>
         <Pagination items={roles} />
-
+        <ConfirmDialog
+          message="Are you sure you want to delete this user?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          isOpen={showConfirm}
+          onClose={() => setShowConfirm(false)}
+        />
       </div>
     </AppLayout>
   );

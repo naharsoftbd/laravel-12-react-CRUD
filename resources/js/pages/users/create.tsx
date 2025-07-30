@@ -53,7 +53,7 @@ export default function Create({ roles }) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create User" />
             <div className="flex h-full items-center flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-                <form className="flex flex-col gap-6 shadow-md sm:rounded-lg p-4 w-1/2" onSubmit={submit}>
+                <form className="flex flex-col gap-6 shadow-md sm:rounded-lg p-4 w-full sm:w-2/3" onSubmit={submit}>
                     <h1 className='!text-left items-start font-extrabold'>Add New User</h1>
                     <div className="grid gap-6">
                         <div className="grid gap-2">

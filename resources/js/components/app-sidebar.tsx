@@ -3,15 +3,56 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemWithSubmenu, type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, ShoppingBasket, Users, Notebook } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Folder, LayoutGrid, ShoppingBasket, Users, Notebook,
+    UserRound,
+    TrendingUp,
+    HandHelping,
+    TrendingUpDown,
+    Printer,
+    ListTodo,
+    ShieldCheck
+ } from 'lucide-react';
 import AppLogo from './app-logo';
+import { can } from '@/lib/can';
 
 const mainNavItems: NavItemWithSubmenu [] = [
     {
         title: 'Dashboard',
         icon: LayoutGrid,
         href: '/dashboard',
+    },
+    {
+        title: 'Customers',
+        icon: UserRound,
+        href: '/customers',
+        
+    },
+    {
+        title: 'Sales',
+        icon: TrendingUp,
+        submenu:[
+            {
+                title: 'Proposals',
+                href: '/proposals',
+                icon: HandHelping, 
+            },
+            {
+                title: 'Estimates',
+                href: '/estimates',
+                icon: TrendingUpDown, 
+            },
+            {
+                title: 'Invoices',
+                href: '/invoices',
+                icon: Printer, 
+            },
+            {
+                title: 'Items',
+                href: '/items',
+                icon: ListTodo, 
+            },
+        ]
     },
     {
         title: 'Product',
@@ -34,11 +75,19 @@ const mainNavItems: NavItemWithSubmenu [] = [
         title: 'Users',
         href: '/users',
         icon: Users,
+        permission: 'users.menu'
     },
     {
         title: 'Roles',
         href: '/roles',
         icon: Notebook,
+        permission: 'roles.menu'
+    },
+    {
+        title: 'Permissions',
+        href: '/permissions',
+        icon: ShieldCheck,
+        permission: 'permissions.menu'
     },
 ];
 
@@ -48,6 +97,11 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { props } = usePage();
+    const auth = props.auth || {};
+    const permissions = auth.permissions;
+    const filterdNavItems = mainNavItems.filter((item)=> !item.permission || permissions.includes(item.permission))
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -63,7 +117,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={filterdNavItems} />
             </SidebarContent>
 
             <SidebarFooter>

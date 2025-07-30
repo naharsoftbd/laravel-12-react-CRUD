@@ -25,6 +25,7 @@ export interface NavItem {
 export interface NavItemWithSubmenu extends NavItem {
     href?: string;
     submenu?: NavItem[] | null;
+    permission?: string;
 }
 
 export interface SharedData {

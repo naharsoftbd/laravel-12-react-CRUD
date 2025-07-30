@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -36,6 +41,7 @@ class UserController extends Controller
             'roles' => $user->roles,
             'created_at' => $user->created_at->format('d M Y')
         ]);
+        
         return Inertia::render('users/index',[
             'users' => $users,
             'filters' => $request->search
@@ -63,13 +69,9 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $data = $request->only('name','email');
 
-        $user->syncRoles($request->roles);
+        $user = $this->userService->create($data, $request->password, $request->roles);
 
         event(new Registered($user));
 
@@ -89,7 +91,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::find($id);
+        $user = $this->userService->find($id);
         return Inertia::render('users/edit',[
             'user' => $user,
             'userRoles' => $user->roles()->pluck('name'),
@@ -133,9 +135,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if($user){
-            $user->delete();
-        }
+        $user = $this->userService->delete($user->id);
 
         return redirect()->route('users.index')->with(['success' => 'User Deleted Successfully']);
     }

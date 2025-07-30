@@ -20,7 +20,10 @@ class PermissionSeeder extends Seeder
             'View',
             'Create',
             'Edit',
-            'Delete'
+            'Delete',
+            'users.menu',
+            'roles.menu',
+            'permissions.menu'
         ];
 
         foreach($permissions as $key => $value){
@@ -32,6 +35,9 @@ class PermissionSeeder extends Seeder
       $role->givePermissionTo('Create');
       $role->givePermissionTo('Edit');
       $role->givePermissionTo('Delete');
+      $role->givePermissionTo('users.menu');
+      $role->givePermissionTo('roles.menu');
+      $role->givePermissionTo('permissions.menu');
 
       
       $user = \App\Models\User::factory()->create([
