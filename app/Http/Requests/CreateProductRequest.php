@@ -25,7 +25,8 @@ class CreateProductRequest extends FormRequest
             'name'=>'required|string|max:255',
             'description'=>'required|string|max:1000',
             'price'=>'required|numeric|min:0',
-            'featuredimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'featuredimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'services'=>'required|array|min:1',
         ];
     }
 }

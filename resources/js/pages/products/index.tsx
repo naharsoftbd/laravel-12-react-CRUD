@@ -22,6 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 export default function Index({ products, filters, flash }) {
+  console.log(products);
   const [showConfirm, setShowConfirm] = useState(false);
   const [productid, setProductId] = useState(false);
 
@@ -108,6 +109,9 @@ export default function Index({ products, filters, flash }) {
                   Description
                 </th>
                 <th scope="col" className="px-6 py-4">
+                  Services
+                </th>
+                <th scope="col" className="px-6 py-4">
                   Featured Image
                 </th>
                 <th scope="col" className="px-6 py-4">
@@ -131,6 +135,7 @@ export default function Index({ products, filters, flash }) {
                   </td>
                   <td className="px-6 py-2">{product.price}</td>
                   <td className="px-6 py-2">{product.description}</td>
+                  <td className="px-6 py-2">{product.services.map((service) => service.name).join(', ')}</td>
                   <td className="px-6 py-2"><img src={product.featured_image} /></td>
                   <td className="px-6 py-2">{product.created_at}</td>
                   <td className="px-6 py-2">

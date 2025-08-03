@@ -31,13 +31,14 @@ class ProductController extends Controller
                 ->orWhere('price', 'like', "{$search}")
         );
         }
-        $products = $products->latest()->paginate(10)->withQueryString();
+        $products = $products->latest()->with('services')->paginate(10)->withQueryString();
         $products->getCollection()->transform(fn($product)=>[
             'id' => $product->id,
             'name'=> $product->name,
             'price' => $product->price,
             'description' => $product->description,
             'featured_image' => $product->featured_image,
+            'services' => $product->services,
             'created_at' => $product->created_at->format('d M Y')
         ]);
         return Inertia::render('products/index',[

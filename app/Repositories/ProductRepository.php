@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
+use App\Models\Service;
 
 
 class ProductRepository implements ProductRepositoryInterface
@@ -27,6 +28,16 @@ class ProductRepository implements ProductRepositoryInterface
             'price' => $data['price'],
             'featured_image' => $featuredimage
         ]);
+
+        foreach($data['services'] as $service){
+
+            $services = Service::create([
+                'name' => $service,
+                'product_id' => $product->id
+            ]);
+
+        }
+        
         
 
         return $product;

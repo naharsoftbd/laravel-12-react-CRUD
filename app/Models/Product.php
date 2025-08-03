@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\CreatedBy;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Service;
 
 class Product extends Model
 {
@@ -15,4 +17,9 @@ class Product extends Model
         'price',
         'featured_image'
     ];
+
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class);
+    }
 }
